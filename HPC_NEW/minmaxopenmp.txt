@@ -1,0 +1,106 @@
+#include <iostream>
+#include <omp.h>
+
+using namespace std;
+
+int minval(int arr[], int n) {
+    int minval = arr[0];
+    #pragma omp parallel for reduction(min : minval)
+    for (int i = 0; i < n; i++) {
+        if (arr[i] < minval) minval = arr[i];
+    }
+    return minval;
+}
+
+int maxval(int arr[], int n) {
+    int maxval = arr[0];
+    #pragma omp parallel for reduction(max : maxval)
+    for (int i = 0; i < n; i++) {
+        if (arr[i] > maxval) maxval = arr[i];
+    }
+    return maxval;
+}
+
+int sum(int arr[], int n) {
+    int sum = 0;
+    #pragma omp parallel for reduction(+ : sum)
+    for (int i = 0; i < n; i++) {
+        sum += arr[i];
+    }
+    return sum;
+}
+
+double average(int arr[], int n) {
+    return (double)sum(arr, n) / n;
+}
+
+int main() {
+    int n;
+    cout << "Enter the number of elements in the array: ";
+    cin >> n;
+
+    int arr[n];
+    cout << "Enter " << n << " elements:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    cout << "The minimum value is: " << minval(arr, n) << '\n';
+    cout << "The maximum value is: " << maxval(arr, n) << '\n';
+    cout << "The summation is: " << sum(arr, n) << '\n';
+    cout << "The average is: " << average(arr, n) << '\n';
+
+    return 0;
+}
+
+/* The purpose of a reduction operation is to combine partial results from multiple threads into a single result
+Include Directives:
+cpp
+Copy code
+#include <iostream>
+#include <omp.h>
+These are preprocessor directives that include the necessary header files. <iostream> is for input/output operations in C++, and <omp.h> is for OpenMP, a library for parallel programming.
+Namespace Declaration:
+cpp
+Copy code
+using namespace std;
+This line allows you to use elements from the std namespace without explicitly specifying it (e.g., std::cout can be written as cout).
+Function Definitions:
+minval(int arr[], int n):
+Calculates the minimum value in an array.
+Uses OpenMP directive #pragma omp parallel for reduction(min : minval) to parallelize the loop and perform a reduction operation to find the minimum value.
+maxval(int arr[], int n):
+Calculates the maximum value in an array.
+Similar to minval, uses OpenMP directive #pragma omp parallel for reduction(max : maxval) for parallelization and reduction to find the maximum value.
+sum(int arr[], int n):
+Calculates the sum of elements in an array.
+Employs OpenMP directive #pragma omp parallel for reduction(+ : sum) for parallel execution and reduction to compute the sum.
+average(int arr[], int n):
+Calculates the average of elements in an array.
+Calls the sum function to compute the sum and divides it by the number of elements (n) to get the average.
+Main Function:
+Declares variables and takes input:
+cpp
+Copy code
+int n;
+cout << "Enter the number of elements in the array: ";
+cin >> n;
+int arr[n];
+cout << "Enter " << n << " elements:\n";
+for (int i = 0; i < n; i++) {
+    cin >> arr[i];
+}
+Prompts the user to enter the number of elements (n) and the array elements, which are stored in the arr array.
+Calls functions to compute and display results:
+cpp
+Copy code
+cout << "The minimum value is: " << minval(arr, n) << '\n';
+cout << "The maximum value is: " << maxval(arr, n) << '\n';
+cout << "The summation is: " << sum(arr, n) << '\n';
+cout << "The average is: " << average(arr, n) << '\n';
+Calls the defined functions (minval, maxval, sum, average) to calculate and output the minimum, maximum, sum, and average of the array elements.
+Return Statement:
+cpp
+Copy code
+return 0;
+Indicates successful completion of the main function and program execution.*/

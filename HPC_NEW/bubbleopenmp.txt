@@ -1,0 +1,146 @@
+#include <iostream>
+#include <vector>
+#include <omp.h>
+#include <ctime>
+
+using namespace std;
+
+void bubble(int array[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (array[j] > array[j + 1]) {
+                swap(array[j], array[j + 1]);
+            }
+        }
+    }
+}
+
+void parallelBubble(int array[], int n) {
+    #pragma omp parallel for
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (array[j] > array[j + 1]) {
+                swap(array[j], array[j + 1]);
+            }
+        }
+    }
+}
+
+void merge(int arr[], int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    vector<int> L(n1), R(n2);
+
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSortSequential(int arr[], int left, int right) {
+    if (left >= right) return;
+
+    int mid = left + (right - left) / 2;
+    mergeSortSequential(arr, left, mid);
+    mergeSortSequential(arr, mid + 1, right);
+    merge(arr, left, mid, right);
+}
+
+void mergeSortParallel(int arr[], int left, int right) {
+    if (left >= right) return;
+
+    int mid = left + (right - left) / 2;
+
+    #pragma omp parallel sections
+    {
+        #pragma omp section
+        mergeSortParallel(arr, left, mid);
+        #pragma omp section
+        mergeSortParallel(arr, mid + 1, right);
+    }
+
+    merge(arr, left, mid, right);
+}
+
+void printArray(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << "\n";
+}
+
+int main() {
+    int n;
+    cout << "Enter the number of elements in the array: ";
+    cin >> n;
+
+    int arr[n], brr[n], crr[n];
+
+    cout << "Enter " << n << " elements:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+        brr[i] = arr[i]; // Copying array for parallel bubble sort
+        crr[i] = arr[i]; // Copying array for merge sort
+    }
+
+    double start_time, end_time;
+
+    // Sequential bubble sort
+    start_time = omp_get_wtime();
+    bubble(arr, n);
+    end_time = omp_get_wtime();
+    cout << "Sequential Bubble Sort took : " << end_time - start_time << " seconds\n";
+    cout << "Sorted array using sequential bubble sort: ";
+    printArray(arr, n);
+
+    // Parallel bubble sort
+    start_time = omp_get_wtime();
+    parallelBubble(brr, n);
+    end_time = omp_get_wtime();
+    cout << "Parallel Bubble Sort took : " << end_time - start_time << " seconds\n";
+    cout << "Sorted array using parallel bubble sort: ";
+    printArray(brr, n);
+
+    // Sequential merge sort
+    start_time = omp_get_wtime();
+    mergeSortSequential(crr, 0, n - 1);
+    end_time = omp_get_wtime();
+    cout << "Sequential Merge Sort took : " << end_time - start_time << " seconds\n";
+    cout << "Sorted array using sequential merge sort: ";
+    printArray(crr, n);
+
+    // Parallel merge sort
+    start_time = omp_get_wtime();
+    mergeSortParallel(crr, 0, n - 1);
+    end_time = omp_get_wtime();
+    cout << "Parallel Merge Sort took : " << end_time - start_time << " seconds\n";
+    cout << "Sorted array using parallel merge sort: ";
+    printArray(crr, n);
+
+    return 0;
+}

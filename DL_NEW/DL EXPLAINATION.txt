@@ -1,0 +1,132 @@
+from sklearn.metrics import r2_score
+r2 = r2_score(y_test, y1)
+print(f'R2 score: {r2}')
+
+DL1:-
+Importing Libraries:
+import pandas as pd: This line imports the pandas library and gives it an alias pd for easier reference in the code. Pandas is used for data manipulation and analysis.
+import matplotlib.pyplot as plt: Matplotlib is a plotting library in Python used for creating static, animated, and interactive visualizations. Here, it's imported with the alias plt for plotting graphs later in the code.
+Loading and Exploring Data:
+df=pd.read_csv("1_boston_housing.csv"): This line reads the data from a CSV file named "1_boston_housing.csv" into a pandas DataFrame called df. A DataFrame is a 2-dimensional labeled data structure with columns of potentially different types.
+df.head(): This command displays the first few rows of the DataFrame df, giving an overview of the data's structure and content.
+df.isnull().sum(): This line checks for missing values in each column of the DataFrame. isnull() returns a DataFrame of booleans indicating where values are missing, and sum() sums up the missing values for each column.
+Data Preprocessing:
+from sklearn.model_selection import train_test_split: This imports the train_test_split function from scikit-learn, which is used to split the data into training and testing sets.
+x = df.loc[:,df.columns!='MEDV'] and y = df.loc[:,df.columns=='MEDV']: These lines separate the features (input variables) and the target variable (MEDV, which likely stands for Median Value) from the DataFrame.
+MinMaxScaler: This is imported from scikit-learn for feature scaling. It scales features to a given range, often 0 to 1.
+x_train and x_test are scaled using mms.fit_transform() and mms.transform() respectively. This step ensures that all features are on a similar scale, which can be beneficial for certain machine learning algorithms.
+Building the Neural Network Model:
+from keras.models import Sequential: This imports the Sequential model from Keras. Sequential is a linear stack of layers used for building deep learning models.
+from keras.layers import Dense: This imports the Dense layer, which is a standard fully connected neural network layer.
+model = Sequential(): This line initializes a Sequential model, which allows adding layers in a sequential manner.
+Layers are added to the model using model.add(), including an input layer (dense_1), hidden layers (dense_2), and an output layer (dense_output). The number of neurons in each layer and the activation functions are specified.
+model.compile(): This compiles the model by specifying the optimizer (Adam), the loss function (Mean Squared Error), and metrics to track during training (Mean Absolute Error in this case).
+Model Training:
+model.fit(): This trains the model using the training data (x_train and y_train) for a specified number of epochs (training iterations). The validation_split parameter splits a portion of the training data for validation during training.
+Model Evaluation:
+model.evaluate(): This evaluates the trained model's performance on the test data (x_test and y_test) using the specified loss function and metrics.
+model.predict(): This generates predictions for the target variable (MEDV) using the test data (x_test).
+Evaluation Metrics:
+from sklearn.metrics import r2_score: This imports the R-squared score calculation from scikit-learn. R-squared is a measure of how well the model fits the actual data.
+Plotting Training Loss:
+plt.plot(): This function from Matplotlib is used to plot the training and validation loss over epochs, providing a visual representation of the model's learning progress.
+plt.title(), plt.xlabel(), plt.ylabel(), plt.legend(), and plt.show(): These functions are used to set the plot title, axis labels, legend, and display the plot respectively.
+The overall purpose of this code is to demonstrate building, training, evaluating, and visualizing a neural network regression model using Keras and TensorFlow for predicting housing prices based on the Boston housing dataset. It covers data preprocessing, model construction, training, evaluation, and visualization of training progress.
+
+DL2-
+Importing Libraries:
+import pandas as pd: Imports the Pandas library with the alias pd for data manipulation.
+import numpy as np: Imports the NumPy library with the alias np for numerical operations.
+from sklearn.preprocessing import LabelEncoder: Imports the LabelEncoder class from Scikit-Learn for encoding categorical labels.
+from sklearn.model_selection import train_test_split: Imports the train_test_split function from Scikit-Learn for splitting data into training and testing sets.
+from sklearn.metrics import accuracy_score: Imports the accuracy_score function from Scikit-Learn for evaluating model accuracy.
+from tensorflow.keras.models import Sequential, load_model: Imports the Sequential model and load_model function from TensorFlow's Keras API for defining and loading neural network models.
+from tensorflow.keras.layers import Dense: Imports the Dense layer from Keras for defining fully connected layers in the neural network.
+Loading Data:
+Defines the URL of the dataset for letter recognition.
+Defines column names (names) based on the dataset description.
+Uses Pandas' read_csv function to load the data from the specified URL into a DataFrame (data) with the provided column names.
+Data Preprocessing:
+Separates the features (X) from the target variable (y) in the DataFrame using drop and assigning the target variable to y.
+Encodes the target variable (y) using LabelEncoder() to convert categorical labels (letters A-Z) into numerical format (y_encoded).
+Train-Test Split:
+Splits the data into training and testing sets (X_train, X_test, y_train, y_test) using train_test_split.
+Uses 80% of the data for training (train_size=0.8) and 20% for testing (test_size=0.2), with a fixed random state for reproducibility (random_state=42).
+Model Definition:
+Defines a neural network model using the Sequential API.
+Adds three layers to the model: two hidden layers with 64 neurons each and ReLU activation, and an output layer with softmax activation suitable for multi-class classification.
+Model Compilation:
+Compiles the model using the Adam optimizer, sparse categorical cross-entropy loss function (loss='sparse_categorical_crossentropy'), and accuracy as the metric to monitor during training.
+Model Training:
+Trains the model using the training data (X_train, y_train) for 20 epochs with a batch size of 32 (batch_size=32).
+Includes a validation split of 10% (validation_split=0.1) to monitor the model's performance on a portion of the training data during training.
+Model Saving:
+Saves the trained model to a file named "letter_recognition_model.h5" using the .save() method.
+Model Evaluation:
+Evaluates the trained model's performance using the testing data (X_test, y_test) and calculates the test accuracy.
+Label Encoder Saving:
+Saves the fitted LabelEncoder object's classes to a NumPy file named "label_encoder_classes.npy" using np.save().
+Prediction Functions:
+Defines two functions: preprocess_input() to preprocess input data and predict_output() to predict the output letter based on input dimensions using the trained model and saved label encoder.
+Model Loading and Prediction:
+Loads the saved model and label encoder using load_model() and np.load() respectively.
+Takes input dimensions from the user, preprocesses the input, and predicts the output letter using the predict_output() function.
+Prints the predicted letter.
+
+DL3-
+Importing Libraries:
+import tensorflow as tf: Imports the TensorFlow library for deep learning.
+import numpy as np: Imports NumPy for numerical computations.
+import matplotlib.pyplot as plt: Imports Matplotlib for plotting graphs.
+Loading Fashion MNIST Dataset:
+fashion_mnist = tf.keras.datasets.fashion_mnist: Loads the Fashion MNIST dataset, a collection of grayscale images of fashion items.
+(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data(): Loads the training and testing data along with their corresponding labels.
+Data Preprocessing:
+class_names: Defines a list of class names corresponding to the labels in the dataset.
+train_images.shape: Prints the shape of the training images array.
+Normalizes the pixel values of images by dividing them by 255.0, scaling them to the range of [0, 1].
+Visualizing Data:
+Uses Matplotlib to create a grid of 25 images from the training set, along with their corresponding labels.
+Building the Neural Network Model:
+Imports necessary modules from Keras (which is integrated into TensorFlow in this code).
+Defines a sequential model.
+Adds layers to the model:
+Flatten: Flattens the 2D array of pixel values into a 1D array.
+Dense(128, activation='relu'): Adds a densely connected layer with 128 neurons and ReLU activation.
+Dense(10): Adds the output layer with 10 neurons (one for each class) without activation (to be used with from_logits=True later).
+Compiles the model with Adam optimizer, Sparse Categorical Crossentropy loss function, and accuracy metric.
+Model Training:
+Fits the model to the training data for 10 epochs.
+Model Evaluation:
+Evaluates the model on the test data to calculate test loss and accuracy.
+Making Predictions:
+Defines a probability model by adding a Softmax layer on top of the trained model.
+Uses the probability model to predict class probabilities for test images.
+Plotting Predictions:
+Defines a function plot_image to plot an image with its predicted and true labels.
+Uses Matplotlib to plot a grid of 25 test images along with their predicted and true labels, highlighting correct predictions in blue and incorrect predictions in red.
+This code essentially loads the Fashion MNIST dataset, preprocesses the data, builds and trains a neural network model, evaluates its performance, and visualizes predictions on test data.
+
+DL4-
+Normalization Process in the Code:
+The code first imports MinMaxScaler from Scikit-Learn's preprocessing module.
+An instance of MinMaxScaler is created with a specified feature range of (0, 1) using feature_range=(0, 1).
+The closing prices of the stock (the feature to be normalized) are extracted from the DataFrame and reshaped into a 2D array using NumPy's np.array(data['Close']).reshape(-1, 1).
+The fit_transform method of the scaler is then applied to the reshaped data to perform Min-Max scaling. This method fits the scaler to the data (calculating the minimum and maximum values) and then transforms the data to the specified range.
+Dataset with timestep
+Suppose you have a time series dataset with the following values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].
+If you call create_dataset(data, time_step=3) on this dataset, it will create input-output pairs as follows:
+X: [[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7], [6, 7, 8]]
+y: [4, 5, 6, 7, 8, 9]Creating datasets with time steps is essential for training sequential models like LSTM, where the model learns patterns and dependencies over time.
+LSTM is a type of recurrent neural network (RNN) designed to handle long-range dependencies in sequential data.
+It has specialized components like forget gates, input gates, and output gates to manage and update memory over time.
+Forget gates decide what information to discard from the past.
+Input gates decide what new information to add to the memory.
+Cell states represent the memory of the model.
+Output gates determine what information to output based on the current state.
+LSTMs are effective for tasks like time series forecasting and natural language processing (NLP) where understanding long-term patterns is crucial.
+Convert your input data (e.g., a Pandas DataFrame or a list) into a numpy array.
+Use .reshape() to reshape the data into a 3D array with dimensions [samples, time steps, features].
+Determine the values for samples, time steps, and features based on your dataset and modeling requirements.
+Ensure that the reshaped data matches the input shape expected by your LSTM model.
+

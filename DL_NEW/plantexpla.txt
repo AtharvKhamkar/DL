@@ -1,0 +1,43 @@
+his code is a TensorFlow/Keras implementation for training a convolutional neural network (CNN) to classify potato leaf images into three classes: 'Early_Blight', 'Healthy', and 'Late_Blight'. Let's break down the code step by step:
+
+Importing Libraries:
+TensorFlow (import tensorflow as tf): Deep learning library.
+TensorFlow's Keras API (from tensorflow.keras import layers): High-level API for building and training models.
+Matplotlib (import matplotlib.pyplot as plt): Plotting library.
+NumPy (import numpy as np): Library for numerical computations.
+Pandas (import pandas as pd): Library for data manipulation.
+Loading the Dataset:
+The dataset consists of images of potato leaves with three classes: Early Blight, Healthy, and Late Blight.
+The tf.keras.preprocessing.image_dataset_from_directory function is used to load the dataset from directories.
+Three datasets are loaded: training, testing, and validation, each with different numbers of images belonging to the three classes.
+Data Exploration:
+class_names: Extracts the class names from the training dataset.
+Visualization: Plots a sample of images from the training dataset along with their corresponding class names.
+Data Preprocessing:
+Data is preprocessed and prepared for training:
+resize_scale: Sequential model to resize images to (IMAGE_SIZE, IMAGE_SIZE) and rescale pixel values to [0, 1].
+data_augmentation: Sequential model to apply random flips and rotations for data augmentation.
+input_shape: Defines the input shape for the model.
+Model Building:
+tf.keras.Sequential: Defines a sequential model.
+Layers:
+Resizing and rescaling layers for preprocessing.
+Convolutional layers with ReLU activation followed by max-pooling layers.
+Flatten layer to convert 2D output to 1D.
+Dense layers with ReLU activation for classification.
+Output layer with softmax activation for multi-class classification.
+Model Compilation:
+Configures the model for training:
+Optimizer: Adam optimizer.
+Loss function: Sparse categorical crossentropy.
+Metrics: Accuracy for evaluation.
+Model Training:
+model.fit: Trains the model on the training data.
+Epochs: 5
+Batch size: 32
+Verbose: Prints training progress.
+Validation data: Validation dataset for monitoring performance during training.
+Model Evaluation:
+model.evaluate: Evaluates the model on the testing data.
+Computes test loss and accuracy.
+Prints and stores the test accuracy.
